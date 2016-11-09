@@ -145,8 +145,9 @@ before_install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install -y tree ; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install tree ; fi
   - tree
-  # Workaround on OS X for Travis issue: https://github.com/travis-ci/travis-ci/issues/6700
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then rvm reinstall 1.9.3 --disable-binary ; fi
+  # Workaround on OS X for Travis issue: https://github.com/travis-ci/travis-ci/issues/4709
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then sudo security delete-certificate -Z 2F173F7DE99667AFA57AF80AA2D1B12FAC830338 /System/Library/Keychains/SystemRootCertificates.keychain ; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then rvm osx-ssl-certs update all ; fi
 
 install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then docker build -f Dockerfile-$DOCKER_OS-py${TRAVIS_PYTHON_VERSION} -t fredrikaverpil/pyside2-$DOCKER_OS-py${TRAVIS_PYTHON_VERSION} . ; fi
